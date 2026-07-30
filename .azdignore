@@ -1,0 +1,14 @@
+# Files excluded from the code-deploy ZIP (azd uses .gitignore syntax + this file).
+.git/
+.agentic/
+deploy/
+scripts/
+tests/
+.venv/
+.azure/
+__pycache__/
+*.pyc
+.env
+.env.*
+Dockerfile
+.dockerignore

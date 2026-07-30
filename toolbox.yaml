@@ -1,0 +1,16 @@
+# toolbox.yaml - Foundry Toolbox for the maf-orchestrator agent.
+#
+# Create/update it with:
+#   azd ai toolbox create maf-tools --from-file ./toolbox.yaml \
+#     --project-endpoint https://<account>.services.ai.azure.com/api/projects/<project>
+# Then copy the versioned MCP endpoint it prints into azd env value TOOLBOX_ENDPOINT.
+#
+# The Databricks Genie tool authenticates via the `databricks-genie` project connection, which uses
+# Entra pass-through (user-entra-token, audience = AzureDatabricks). At runtime Foundry forwards the
+# CALLING USER's Entra token to the Genie MCP, so Unity Catalog enforces that user's RBAC.
+description: MAF orchestrator tools - Databricks Genie with per-user Entra pass-through
+tools:
+  - type: mcp
+    server_label: databricks_genie
+    project_connection_id: databricks-genie
+    require_approval: "never"

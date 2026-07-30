@@ -1,0 +1,14 @@
+.git
+.venv
+.uv
+__pycache__
+*.pyc
+.env
+.env.*
+.azure
+.agentic
+infra
+scripts
+tests
+README.md
+*.md

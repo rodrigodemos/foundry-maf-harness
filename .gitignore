@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.uv/
+*.egg-info/
+
+# Env / secrets
+.env
+.env.*
+!.env.sample
+
+# azd / Azure
+.azure/
+
+# Local, environment-specific notes and provisioning details (never publish).
+# Keep real subscription/tenant/workspace/user values here, out of source control.
+.agentic/
+*.local
+*.local.*
+
+# Harness runtime artifacts (file memory / workspace created at runtime).
+agent-file-memory/
+maf-agent-workspace/
+
+# OS / editor
+.DS_Store
+Thumbs.db

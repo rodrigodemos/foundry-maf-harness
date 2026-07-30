@@ -1,0 +1,62 @@
+# azure.yaml - Azure Developer CLI (azd) config for the Foundry hosted agent.
+# Schema aligned to the official sample:
+#   github.com/microsoft-foundry/foundry-samples .../agent-framework/responses/01-basic/azure.yaml
+#
+# The Foundry agent extension owns agent hosting via infra.provider: microsoft.foundry (code deploy).
+# It binds to the EXISTING project via the azd env value FOUNDRY_PROJECT_ENDPOINT (see `azd env set`),
+# so we do NOT declare an `ai-project` service that would provision a new one.
+#
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+
+requiredVersions:
+  extensions:
+    azure.ai.agents: '>=1.0.0-beta.4'
+
+name: foundry-maf-harness
+
+services:
+  maf-orchestrator:
+    host: azure.ai.agent
+    project: .
+    language: python
+    codeConfiguration:
+      runtime: python_3_13
+      entryPoint: main.py
+      # Prerelease deps are pinned exactly in requirements.txt so remote pip installs them without --pre.
+      depResolution: remote_build
+    kind: hosted
+    name: maf-orchestrator
+    description: MAF harness agent; answers data questions via Databricks Genie with per-user Entra identity passthrough.
+    metadata:
+      tags:
+        - Agent Framework
+        - Responses Protocol
+        - Databricks
+    protocols:
+      - protocol: responses
+        version: 2.0.0
+    # FOUNDRY_PROJECT_ENDPOINT and APPLICATIONINSIGHTS_CONNECTION_STRING are injected by the platform.
+    # DATABRICKS_GENIE_SPACE_ID is set once the OAuth-passthrough MCP connection exists; until
+    # then the agent runs tool-less and still serves /responses.
+    environmentVariables:
+      - name: AZURE_AI_MODEL_DEPLOYMENT_NAME
+        value: ${AZURE_AI_MODEL_DEPLOYMENT_NAME}
+      - name: MODEL_DEPLOYMENT_NAME
+        value: ${AZURE_AI_MODEL_DEPLOYMENT_NAME}
+      - name: FOUNDRY_MODEL
+        value: ${AZURE_AI_MODEL_DEPLOYMENT_NAME}
+      - name: TOOLBOX_ENDPOINT
+        value: ${TOOLBOX_ENDPOINT}
+      - name: DATABRICKS_WORKSPACE_URL
+        value: ${DATABRICKS_WORKSPACE_URL}
+      - name: UC_CATALOG
+        value: ${UC_CATALOG}
+      - name: UC_SCHEMA
+        value: ${UC_SCHEMA}
+    container:
+      resources:
+        cpu: '1'
+        memory: 2Gi
+
+infra:
+  provider: microsoft.foundry
